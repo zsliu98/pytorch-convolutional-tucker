@@ -12,9 +12,29 @@ def train(model: nn.Module,
           epoch_num: int,
           optimizer: torch.optim.Optimizer,
           scheduler,
-          scheduler_step,
+          scheduler_step: str,
           loss_func,
           path: str):
+    """
+    train the model over training data set, use validation data set to choose the best model
+    before starting the training, it will try to load a existing training at the path
+    after each epoch, it will store the model at the path
+    Parameters
+    ----------
+    model:
+    train_loader: dataloader of training data set
+    val_loader: dataloader of validation data set
+    epoch_num: number of epochs
+    optimizer: optimizer
+    scheduler: learning rate scheduler
+    scheduler_step: 'batch' or 'epoch', how often does the scheduler take one step
+    loss_func: loss function
+    path: path for load/store the training progress
+
+    Returns
+    -------
+
+    """
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     epoch = 0
     loss_list = []
@@ -93,6 +113,17 @@ def train(model: nn.Module,
 
 def test(model: nn.Module,
          test_loader: torch.utils.data.DataLoader):
+    """
+    test the model over test data set and return accuracy
+    Parameters
+    ----------
+    model: inference model
+    test_loader: dataloader of test data set
+
+    Returns
+    -------
+    accuracy on test data set
+    """
     model.eval()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     correct = 0

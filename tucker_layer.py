@@ -14,6 +14,20 @@ class TuckerLayer(nn.Module):
 
     def __init__(self, in_channels, r2, r1, out_channels, kernel_size, stride, padding,
                  weight=None, bias=None):
+        """
+        init tucker layer
+        Parameters
+        ----------
+        in_channels: number of input channels
+        r2: reduced number of input channels
+        r1: reduced number of output channels
+        out_channels: number of output channels
+        kernel_size: size of the convolution kernel
+        stride: stride of the convolution
+        padding: padding of the convolution
+        weight: if provided, load the weights into the three convolution layers. Default: None
+        bias: if provided, load the bias into the last convolution layer. Default: None
+        """
         super().__init__()
         conv1 = nn.Conv2d(in_channels=in_channels, out_channels=r2, kernel_size=1,
                           stride=1, padding=0, bias=False)
@@ -31,6 +45,18 @@ class TuckerLayer(nn.Module):
 
     @classmethod
     def from_Conv2D(cls, conv: nn.Conv2d, rank=None, method='HOOI'):
+        """
+        return a tucker layer decomposed from the input convolutional layer
+        Parameters
+        ----------
+        conv: input convolutional layer
+        rank: ranks of the factor matrices
+        method: algorithm of tucker decomposition - 'HOSVD' or 'HOOI'
+
+        Returns
+        -------
+
+        """
         if rank is None:
             original_weight = conv.weight.cpu()
             rank = rank_selection(original_weight.data.detach().numpy())
@@ -49,11 +75,27 @@ class TuckerLayer(nn.Module):
         return self.tucker_conv(x)
 
     def factor_matrix(self):
+        """
+        get the two factor matrices of the tucker layer
+        Returns
+        -------
+
+        """
         weight1 = torch.transpose(self.tucker_conv[0].weight.squeeze(3).squeeze(2), 0, 1)
         weight3 = self.tucker_conv[2].weight.squeeze(3).squeeze(2)
         return weight1, weight3
 
     def orthogonal_error(self, ord='fro'):
+        """
+        get the orthogonal error |U^TU-I| + |V^TV-I|
+        Parameters
+        ----------
+        ord: chosen matrix norm, see https://pytorch.org/docs/stable/generated/torch.linalg.matrix_norm.html
+             two common practice: ‘fro’: frobenius norm, default; 2: largest singular value
+        Returns
+        -------
+
+        """
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         weight1, weight3 = self.factor_matrix()
         error1 = torch.linalg.matrix_norm(torch.matmul(weight1.T, weight1) - torch.eye(weight1.shape[1]).to(device), ord=ord)
