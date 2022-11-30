@@ -8,7 +8,7 @@ We test this compression techniques on two data sets: FashionMNIST and CIFAR-10.
 - `trainer.py`: code for training and testing
 - `tucker_layer.py`: implementation of compression of a convolutional layer
 - `decomposition.py`: implementation of tucker decomposition algorithms: HOSVD and HOOI based on [tensorly](https://github.com/tensorly/tensorly)
-- `vbmf.py`: Variational Bayesian matrix factorization, from [VBMF](https://github.com/CasvandenBogaard/VBMF)
+- `vbmf.py`: Variational Bayesian matrix factorization based on [VBMF](https://github.com/CasvandenBogaard/VBMF)
 - `AlexNet-MNIST.ipynb`: apply compression on AlexNet with FashionMNIST data set
 - `AlexNet-CIFAR10.ipynb`: apply compression on AlexNet with CIFAR-10 data set
 
