@@ -1,7 +1,6 @@
 import torch
 import tensorly as tl
 from tensorly.base import unfold
-from tensorly.tucker_tensor import TuckerTensor
 from tensorly.decomposition import partial_tucker
 from tensorly.tenalg import multi_mode_dot, partial_svd
 

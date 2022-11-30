@@ -21,7 +21,6 @@ class TuckerLayer(nn.Module):
                           stride=stride, padding=padding, bias=False)
         conv3 = nn.Conv2d(in_channels=r1, out_channels=out_channels, kernel_size=1,
                           stride=1, padding=0, bias=True)
-        # print(conv1.weight.data.shape, conv2.weight.data.shape, conv3.weight.data.shape)
 
         if weight is not None:
             conv1.weight.data, conv2.weight.data, conv3.weight.data = weight
